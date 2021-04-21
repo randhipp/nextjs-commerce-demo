@@ -14,14 +14,16 @@
     "next": "10.1.3",
     "react": "17.0.2",
     "react-dom": "17.0.2",
+    "react-paginate": "^7.1.2",
+    "sass": "^1.32.11",
     "slug": "^4.0.4",
     "superagent": "^6.1.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.0.4",
-    "postcss": "^8.1.10",
-    "tailwindcss": "^2.1.1",
     "next-sitemap": "^1.6.25",
-    "restapify": "^1.0.4"
+    "postcss": "^8.1.10",
+    "restapify": "^1.0.4",
+    "tailwindcss": "^2.1.1"
   }
 }

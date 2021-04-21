@@ -1,12 +1,20 @@
-[
-  "#for i in range(10)",
-  {
-    "id": "[#faker:datatype:uuid]",
-    "slug": "samsung-[i]",
-    "name": "[#faker:commerce:productName]",
-    "color": "[#faker:commerce:color]",
-    "price": "[#faker:commerce:price]",
-    "image": "http://localhost:3000/images/phones/s21.webp"
-  },
-  "#endfor"
-]
+{
+  "phones": [
+    "#for i in range(10)",
+    {
+      "id": "[#faker:datatype:uuid]",
+      "slug": "samsung-[i]",
+      "name": "[#faker:commerce:productName]",
+      "color": "[#faker:commerce:color]",
+      "price": "[#faker:commerce:price]",
+      "image": "http://localhost:3000/images/phones/s21.webp"
+    },
+    "#endfor"
+  ],
+  "_meta": {
+    "perPage": 10,
+    "currentPage": "[q:page|1]",
+    "pageCount": 10,
+    "totalCount": 100
+  }
+}
