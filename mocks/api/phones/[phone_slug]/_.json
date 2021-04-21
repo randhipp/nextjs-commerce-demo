@@ -3,5 +3,6 @@
   "slug": "[phone_slug]",
   "name": "[#faker:commerce:productName]",
   "color": "[#faker:commerce:color]",
-  "price": "[#faker:commerce:price]"
+  "price": "[#faker:commerce:price]",
+  "image": "http://localhost:3000/images/phones/s21.webp"
 }
