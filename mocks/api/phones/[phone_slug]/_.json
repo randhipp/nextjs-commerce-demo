@@ -1,0 +1,7 @@
+{
+  "id": "[#faker:datatype:uuid]",
+  "slug": "[phone_slug]",
+  "name": "[#faker:commerce:productName]",
+  "color": "[#faker:commerce:color]",
+  "price": "[#faker:commerce:price]"
+}
