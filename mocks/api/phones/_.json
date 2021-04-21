@@ -1,6 +1,6 @@
 {
   "phones": [
-    "#for i in range(10)",
+    "#for i in range(6)",
     {
       "id": "[#faker:datatype:uuid]",
       "slug": "samsung-[i]",

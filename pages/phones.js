@@ -6,6 +6,8 @@ import superagent from 'superagent'
 
 import styles from '../styles/Pagination.module.scss'
 
+import PhoneCard from '../components/PhoneCard/index'
+
 const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL
 
 const PhoneList = (props) => {
@@ -42,18 +44,19 @@ if(isLoading) {
   content = <div>Loading...</div>;
 } else {
   content = (
-    <ul className="user-list">
+    <div className="grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-2 xl:grid-cols-3 xl:gap-4">
       {props.phones.map((phone, i) => {
           return (
-            <li className="user" key={i}>
-              <Link href={`/phones/${encodeURIComponent(phone.slug)}`}>
-                <a>{phone.name}</a>
-              </Link>
-            </li>
+            <div key={i}>
+                <PhoneCard 
+                  phone={phone}
+                  href={`/phones/${encodeURIComponent(phone.slug)}`}
+                />
+            </div>
           )
         })
       }
-  </ul>
+  </div>
   )
 }
 
@@ -61,31 +64,36 @@ if(isLoading) {
   return (
     <>
       {isLoading && <h1>Loading..</h1>}
-      {!isLoading && (
-        <div className="links">
-          {content}
-        </div>
-      )}
-      <ReactPaginate
-        marginPagesDisplayed={2}
-        pageRangeDisplayed={5}
-        previousLabel={"previous"}
-        nextLabel={"next"}
-        breakLabel={"..."}
-        initialPage={props.currentPage - 1}
-        pageCount={props.pageCount} //page count
-        marginPagesDisplayed={2}
-        pageRangeDisplayed={5}
-        onPageChange={pagginationHandler}
-        containerClassName={styles["paginate-wrap"]}
-        subContainerClassName={styles["paginate-inner"]}
-        pageClassName={styles["paginate-li"]}
-        pageLinkClassName={styles["paginate-a"]}
-        activeClassName={styles["paginate-active"]}
-        nextLinkClassName={styles["paginate-next-a"]}
-        previousLinkClassName={styles["paginate-prev-a"]}
-        breakLinkClassName={styles["paginate-break-a"]}
-      />
+      <div className="flex flex-col items-center justify-center min-h-screen py-2">
+        <main className="flex flex-col items-center justify-center flex-1 px-20 text-center">
+          {!isLoading && (
+            <div className="justify-evenly">
+              {content}
+            </div>
+           
+          )}
+          <ReactPaginate
+            marginPagesDisplayed={2}
+            pageRangeDisplayed={5}
+            previousLabel={"previous"}
+            nextLabel={"next"}
+            breakLabel={"..."}
+            initialPage={props.currentPage - 1}
+            pageCount={props.pageCount} //page count
+            marginPagesDisplayed={2}
+            pageRangeDisplayed={5}
+            onPageChange={pagginationHandler}
+            containerClassName={styles["paginate-wrap"]}
+            subContainerClassName={styles["paginate-inner"]}
+            pageClassName={styles["paginate-li"]}
+            pageLinkClassName={styles["paginate-a"]}
+            activeClassName={styles["paginate-active"]}
+            nextLinkClassName={styles["paginate-next-a"]}
+            previousLinkClassName={styles["paginate-prev-a"]}
+            breakLinkClassName={styles["paginate-break-a"]}
+          />
+        </main>
+      </div>
     </>
   )
 }
