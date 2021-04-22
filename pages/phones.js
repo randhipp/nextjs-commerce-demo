@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from "react"
 import ReactPaginate from "react-paginate"
-import Router, { withRouter } from "next/router" 
+import Router, { withRouter } from "next/router"
 import Link from 'next/link'
 import superagent from 'superagent'
 
 import styles from '../styles/Pagination.module.scss'
 
-import PhoneCard from '../components/PhoneCard/index'
+import PhoneCard from '../components/PhoneCard'
+import HeaderCta from '../components/HeaderCta'
+
 
 const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL
 
 const PhoneList = (props) => {
-  const [ isLoading, setIsLoading ] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const startLoading = () => setIsLoading(true)
   const stopLoading = () => setIsLoading(false)
@@ -33,44 +35,50 @@ const PhoneList = (props) => {
     currentQuery.page = page.selected + 1;
 
     props.router.push({
-        pathname: currentPath,
-        query: currentQuery,
+      pathname: currentPath,
+      query: currentQuery,
     });
 
-};
+  };
 
-let content = null;
-if(isLoading) {
-  content = <div>Loading...</div>;
-} else {
-  content = (
-    <div className="grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-2 xl:grid-cols-3 xl:gap-4">
-      {props.phones.map((phone, i) => {
+  let content = null;
+  if (isLoading) {
+    content = <div>Loading...</div>;
+  } else {
+    content = (
+      <div className="grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-2 xl:grid-cols-3 xl:gap-3">
+        {props.phones.map((phone, i) => {
           return (
             <div key={i}>
-                <PhoneCard 
-                  phone={phone}
-                  href={`/phones/${encodeURIComponent(phone.slug)}`}
-                />
+              <PhoneCard
+                phone={phone}
+                href={`/phones/${encodeURIComponent(phone.slug)}`}
+              />
             </div>
           )
         })
-      }
-  </div>
-  )
-}
+        }
+      </div>
+    )
+  }
 
 
   return (
     <>
       {isLoading && <h1>Loading..</h1>}
-      <div className="flex flex-col items-center justify-center min-h-screen py-2">
-        <main className="flex flex-col items-center justify-center flex-1 px-20 text-center">
+
+      <div className="flex flex-col items-center justify-center min-h-screen py-0 px-0">
+        <main className="flex flex-col items-center justify-center flex-1 px-0 py-0 text-center">
+          <div className="justify-center">
+            <HeaderCta
+              header={'https://www.circles.life/sg/wp-content/uploads/2021/01/KV.png'}
+            />
+          </div>
           {!isLoading && (
-            <div className="justify-evenly">
+            <div className="w-full px-5">
               {content}
             </div>
-           
+
           )}
           <ReactPaginate
             marginPagesDisplayed={2}
@@ -102,12 +110,12 @@ PhoneList.getInitialProps = async ({ query }) => {
   const page = query.page || 1;
   const { body } = await superagent.get(`${apiBaseUrl}/phones?page=${page}`)
   return {
-      totalCount: body._meta.totalCount,
-      pageCount: body._meta.pageCount,
-      currentPage: body._meta.currentPage,
-      perPage: body._meta.perPage,
-      phones: body.phones,
-      isLoading: false,
+    totalCount: body._meta.totalCount,
+    pageCount: body._meta.pageCount,
+    currentPage: body._meta.currentPage,
+    perPage: body._meta.perPage,
+    phones: body.phones,
+    isLoading: false,
   };
 }
 

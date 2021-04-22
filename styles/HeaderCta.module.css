@@ -1,0 +1,12 @@
+.background {
+  background-color: #000000;
+  background-image: url("https://www.circles.life/sg/wp-content/uploads/2021/01/BG.png");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.backgroundOverlay {
+  opacity: 0.2;
+  transition: background 0.3s, border-radius 0.3s, opacity 0.3s;
+}
