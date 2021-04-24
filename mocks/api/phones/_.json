@@ -1,6 +1,6 @@
 {
   "phones": [
-    "#for i in range(6)",
+    "#for i in range([q:limit|6])",
     {
       "id": "[#faker:datatype:uuid]",
       "slug": "samsung-[i]",
@@ -12,7 +12,7 @@
     "#endfor"
   ],
   "_meta": {
-    "perPage": 10,
+    "perPage": "[q:limit|6]",
     "currentPage": "[q:page|1]",
     "pageCount": 10,
     "totalCount": 100

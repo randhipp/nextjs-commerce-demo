@@ -1,122 +1,69 @@
-import React, { useState, useEffect } from "react"
-import ReactPaginate from "react-paginate"
-import Router, { withRouter } from "next/router"
-import Link from 'next/link'
-import superagent from 'superagent'
+import Head from 'next/head'
 
-import styles from '../styles/Pagination.module.scss'
-
-import PhoneCard from '../components/PhoneCard'
+import PhoneList from '../components/PhoneList'
 import HeaderCta from '../components/HeaderCta'
+import Feature from '../components/Feature'
 
-
+import superagent from 'superagent'
 const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL
 
-const PhoneList = (props) => {
-  const [isLoading, setIsLoading] = useState(false)
+export async function getServerSideProps({ query }) {
 
-  const startLoading = () => setIsLoading(true)
-  const stopLoading = () => setIsLoading(false)
+  const page = query.page || 1
+  // Call an external API endpoint to get posts
+  const { body } = await superagent.get(`${apiBaseUrl}/phones?page=${page}&limit=9`)
+  // const posts = await res.json()
+  // console.log(body)
 
-  useEffect(() => {
-    // Router event handler
-    Router.events.on("routeChangeStart", startLoading)
-    Router.events.on("routeChangeComplete", stopLoading)
-    return () => {
-      Router.events.off("routeChangeStart", startLoading)
-      Router.events.off("routeChangeComplete", stopLoading)
-    }
-  }, [])
-
-  // Triggers fetch for new page
-  const pagginationHandler = (page) => {
-    const currentPath = props.router.pathname;
-    const currentQuery = { ...props.router.query };
-    currentQuery.page = page.selected + 1;
-
-    props.router.push({
-      pathname: currentPath,
-      query: currentQuery,
-    });
-
-  };
-
-  let content = null;
-  if (isLoading) {
-    content = <div>Loading...</div>;
-  } else {
-    content = (
-      <div className="grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-2 xl:grid-cols-3 xl:gap-3">
-        {props.phones.map((phone, i) => {
-          return (
-            <div key={i}>
-              <PhoneCard
-                phone={phone}
-                href={`/phones/${encodeURIComponent(phone.slug)}`}
-              />
-            </div>
-          )
-        })
-        }
-      </div>
-    )
+  // By returning {props: {posts} }, the Blog component
+  // will receive `posts` as a prop at build time
+  return {
+    props: body
   }
+}
 
-
+export default function Home(props) {
   return (
-    <>
-      {isLoading && <h1>Loading..</h1>}
+    <div className="flex flex-col items-center justify-center min-h-screen py-0 sm:py-2">
+      <Head>
+        <title>Create Next App</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
 
-      <div className="flex flex-col items-center justify-center min-h-screen py-0 px-0">
-        <main className="flex flex-col items-center justify-center flex-1 px-0 py-0 text-center">
-          <div className="justify-center">
-            <HeaderCta
-              header={'https://www.circles.life/sg/wp-content/uploads/2021/01/KV.png'}
-            />
-          </div>
-          {!isLoading && (
-            <div className="w-full px-5">
-              {content}
-            </div>
+      <main className="flex flex-col items-center justify-center flex-1 px-0 text-center py-0 sm:px-10">
+        <HeaderCta
+          header='https://www.circles.life/sg/wp-content/uploads/2021/04/KV.png'
+        >
+        </HeaderCta>
+        <Feature></Feature>
 
-          )}
-          <ReactPaginate
-            marginPagesDisplayed={2}
-            pageRangeDisplayed={5}
-            previousLabel={"previous"}
-            nextLabel={"next"}
-            breakLabel={"..."}
-            initialPage={props.currentPage - 1}
-            pageCount={props.pageCount} //page count
-            marginPagesDisplayed={2}
-            pageRangeDisplayed={5}
-            onPageChange={pagginationHandler}
-            containerClassName={styles["paginate-wrap"]}
-            subContainerClassName={styles["paginate-inner"]}
-            pageClassName={styles["paginate-li"]}
-            pageLinkClassName={styles["paginate-a"]}
-            activeClassName={styles["paginate-active"]}
-            nextLinkClassName={styles["paginate-next-a"]}
-            previousLinkClassName={styles["paginate-prev-a"]}
-            breakLinkClassName={styles["paginate-break-a"]}
-          />
-        </main>
-      </div>
-    </>
+        <p className="mt-3 text-2xl py-0 sm:py-5">
+          Get started by editing{' '}
+          <code className="p-3 font-mono text-lg bg-gray-100 rounded-md">
+            pages/index.js
+          </code>
+        </p>
+
+        {/* <div className="flex flex-wrap items-center justify-around max-w-4xl mt-6 sm:w-full"> */}
+        <PhoneList
+          phones={props.phones}
+          meta={props._meta}
+        >
+        </PhoneList>
+        {/* </div> */}
+      </main>
+
+      <footer className="flex items-center justify-center w-full h-24 border-t">
+        <a
+          className="flex items-center justify-center"
+          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Powered by{' '}
+          <img src="/vercel.svg" alt="Vercel Logo" className="h-4 ml-2" />
+        </a>
+      </footer>
+    </div>
   )
 }
-
-PhoneList.getInitialProps = async ({ query }) => {
-  const page = query.page || 1;
-  const { body } = await superagent.get(`${apiBaseUrl}/phones?page=${page}`)
-  return {
-    totalCount: body._meta.totalCount,
-    pageCount: body._meta.pageCount,
-    currentPage: body._meta.currentPage,
-    perPage: body._meta.perPage,
-    phones: body.phones,
-    isLoading: false,
-  };
-}
-
-export default withRouter(PhoneList)
